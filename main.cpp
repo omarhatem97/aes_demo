@@ -5,7 +5,9 @@
 #include <openssl/err.h>
 #include <string.h>
 #include <iostream>
-
+#include <QFile>
+#include <cstring>
+#include <QDataStream>
 
 
 int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
@@ -15,6 +17,84 @@ int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
             unsigned char *iv, unsigned char *plaintext);
 
 void handleErrors(void);
+
+
+void fun_write(unsigned char ciphertext[100000])
+{
+//    //write to file
+
+//            QFile file("D:\\test.bin");
+//            if (file.open(QIODevice::WriteOnly)) {
+//                file.write(reinterpret_cast<char *>(&ciphertext), sizeof(ciphertext));
+//                file.close();
+//            }
+
+//            //read from file
+//            QFile inFile("D:\\testb.bin");
+//            const QByteArray in = inFile.readAll();
+//            inFile.close();
+
+//            std::memcpy(ciphertext,in.constData(),in.size());
+    QFile file("D:\\test.txt");
+    if(!file.open(QIODevice::WriteOnly)){
+        qDebug() << "error opening!" << endl;
+        return;
+    }
+
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_4_9);
+    for (int i = 0; i < 100000; ++i) {
+        out << ciphertext[i];
+    }
+//    out << ciphertext;
+
+    file.flush();
+    file.close();
+}
+
+
+QByteArray fun_read()
+{
+    //    //write to file
+
+    //            QFile file("D:\\test.bin");
+    //            if (file.open(QIODevice::WriteOnly)) {
+    //                file.write(reinterpret_cast<char *>(&ciphertext), sizeof(ciphertext));
+    //                file.close();
+    //            }
+
+    //            //read from file
+    //            QFile inFile("D:\\testb.bin");
+    //            const QByteArray in = inFile.readAll();
+    //            inFile.close();
+
+    //            std::memcpy(ciphertext,in.constData(),in.size());
+        QFile file("D:\\test.txt");
+        if(!file.open(QIODevice::ReadOnly)){
+            qDebug() << "error opening!" << endl;
+            return NULL;
+        }
+
+        QDataStream in(&file);
+        in.setVersion(QDataStream::Qt_4_9);
+
+        QByteArray iContents = file.readAll();
+
+        unsigned char* arr = new unsigned char[100000];
+
+        std::memcpy(arr,iContents.constData(),iContents.size());
+
+    //    out << ciphertext;
+//        for (int i = 0; i < 100000; ++i) {
+//            arr[i] = (unsigned char)iContents[i];
+//            qDebug() << arr[i] << ' ' << iContents[i] << endl;
+//        }
+
+//        file.flush();
+        file.close();
+        return iContents;
+}
+
 
 
 int main(int argc, char *argv[])
@@ -54,6 +134,12 @@ int main(int argc, char *argv[])
         ciphertext_len = encrypt (plaintext, strlen ((char *)plaintext), key, iv,
                                   ciphertext);
 
+
+
+
+
+//        fun_write(ciphertext);
+        fun_read();
         /* Do something useful with the ciphertext here */
         printf("Ciphertext is:\n");
 //        std::cout << ciphertext << std::endl;
@@ -72,8 +158,11 @@ int main(int argc, char *argv[])
         printf("\n");
         //---------------------------------------------------------------
 
+        QByteArray arr= fun_read();
+        unsigned char c[100000];
+        std::memcpy(c,arr.constData(),arr.size());
         /* Decrypt the ciphertext */
-        decryptedtext_len = decrypt(ciphertext, ciphertext_len, key, iv,
+        decryptedtext_len = decrypt(c, ciphertext_len, key, iv,
           decryptedtext);
 
 //        std::cout << "decrypted: " << decryptedtext << std::endl;
