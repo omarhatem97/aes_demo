@@ -32,8 +32,12 @@ int main(int argc, char *argv[])
       unsigned char *iv = (unsigned char *)"0123456789012345";
 
       /* Message to be encrypted */
+
+
       unsigned char *plaintext =
-                    (unsigned char *)"test for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssltest for openssl";
+                    (unsigned char *)"This is a test of openssl encryption decryption";
+
+
 
       /* Buffer for ciphertext. Ensure the buffer is long enough for the
        * ciphertext which may be longer than the plaintext, dependant on the
@@ -55,7 +59,10 @@ int main(int argc, char *argv[])
 //        std::cout << ciphertext << std::endl;
         printf("%s\n", ciphertext);
 //        BIO_dump_fp (stdout, (const char *)ciphertext, ciphertext_len);
-
+        //print cipher text
+        const char * cipher = (const char *) ciphertext;
+        QString str = QString::fromUtf8(cipher, ciphertext_len);
+        qDebug() << str << endl;
         //-----------------Base64 Encode--------------------------------
         printf("\n");
         char encodedData[100];
@@ -76,6 +83,8 @@ int main(int argc, char *argv[])
         /* Show the decrypted text */
         printf("Decrypted text is:\n");
         printf("%s\n", decryptedtext);
+
+
 
     return a.exec();
 }
